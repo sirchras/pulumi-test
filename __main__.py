@@ -6,6 +6,9 @@ config = pulumi.Config()
 frontend_port = config.require_int('frontend_port')
 backend_port = config.require_int('backend_port')
 mongo_port = config.require_int('mongo_port')
+mongo_host = config.require('mongo_host')
+database = config.require('database')
+node_environment = config.require('node_environment')
 
 stack = pulumi.get_stack()
 

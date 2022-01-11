@@ -1,4 +1,7 @@
 config:
   pulumi-test:backend_port: "3000"
+  pulumi-test:database: cart
   pulumi-test:frontend_port: "3001"
+  pulumi-test:mongo_host: mongodb://mongo:27017
   pulumi-test:mongo_port: "27017"
+  pulumi-test:node_environment: development
