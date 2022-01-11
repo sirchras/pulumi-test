@@ -12,3 +12,12 @@ backend = docker.Image(
   image_name=f'{backend_image_name}:{stack}',
   skip_push=True
 )
+
+# build frontend image
+frontend_image_name = 'frontend'
+frontend = docker.Image(
+  frontend_image_name,
+  build=docker.DockerBuild(context=f'{os.getcwd()}/app/frontend'),
+  image_name=f'{frontend_image_name}:{stack}',
+  skip_push=True
+)
