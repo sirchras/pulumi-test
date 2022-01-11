@@ -40,14 +40,15 @@ network = docker.Network('network', name=f'services:{stack}')
 mongo_container = docker.Container(
   'mongo_container',
   name=f'mongo-{stack}',
+  image=mongo_image.latest,
   ports=[docker.ContainerPortArgs(
     internal=mongo_port,
     external=mongo_port
   )],
-  networks_advanced=docker.ContainerNetworksAdvancedArgs(
+  networks_advanced=[docker.ContainerNetworksAdvancedArgs(
     name=network.name,
     aliases=['mongo']
-  )
+  )]
 )
 
 # backend container
