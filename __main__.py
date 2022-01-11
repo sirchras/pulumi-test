@@ -69,3 +69,21 @@ backend_container = docker.Container(
   )],
   opts=pulumi.ResourceOptions(depends_on=[mongo_container])
 )
+
+# frontend container
+frontend_container = docker.Container(
+  'frontend_container',
+  name=f'frontend-{stack}',
+  image=frontend.base_image_name,
+  ports=[docker.ContainerPortArgs(
+    internal=frontend_port,
+    external=frontend_port
+  )],
+  envs=[
+    f'LISTEN_PORT={frontend_port}',
+    f'HTTP_PROXY=backend-{stack}:{backend_port}'
+  ],
+  networks_advanced=[docker.ContainerNetworksAdvancedArgs(
+    name=network.name
+  )]
+)
