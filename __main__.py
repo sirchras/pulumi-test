@@ -36,10 +36,24 @@ mongo_image = docker.RemoteImage('mongo', name='mongo:bionic')
 # network
 network = docker.Network('network', name=f'services:{stack}')
 
+# mongo container
+mongo_container = docker.Container(
+  'mongo_container',
+  name=f'mongo-{stack}',
+  ports=[docker.ContainerPortArgs(
+    internal=mongo_port,
+    external=mongo_port
+  )],
+  networks_advanced=docker.ContainerNetworksAdvancedArgs(
+    name=network.name,
+    aliases=['mongo']
+  )
+)
+
 # backend container
 backend_container = docker.Container(
   'backend_container',
-  name=f'backend:{stack}',
+  name=f'backend-{stack}',
   image=backend.base_image_name,
   ports=[docker.ContainerPortArgs(
     internal=backend_port,
