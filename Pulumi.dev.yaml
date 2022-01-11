@@ -1,0 +1,4 @@
+config:
+  pulumi-test:backend_port: "3000"
+  pulumi-test:frontend_port: "3001"
+  pulumi-test:mongo_port: "27017"

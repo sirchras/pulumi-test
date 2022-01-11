@@ -2,6 +2,11 @@ import os
 import pulumi
 import pulumi_docker as docker
 
+config = pulumi.Config()
+frontend_port = config.require_int('frontend_port')
+backend_port = config.require_int('backend_port')
+mongo_port = config.require_int('mongo_port')
+
 stack = pulumi.get_stack()
 
 # build backend image
