@@ -32,3 +32,26 @@ frontend = docker.Image(
 
 # build mongodb image
 mongo_image = docker.RemoteImage('mongo', name='mongo:bionic')
+
+# network
+network = docker.Network('network', name=f'services:{stack}')
+
+# backend container
+backend_container = docker.Container(
+  'backend_container',
+  name=f'backend:{stack}',
+  image=backend.base_image_name,
+  ports=[docker.ContainerPortArgs(
+    internal=backend_port,
+    external=backend_port
+  )],
+  envs=[
+    f'DATABASE_HOST={mongo_host}',
+    f'DATABASE_NAME={database}',
+    f'NODE_ENV={node_environment}'
+  ],
+  networks_advanced=[docker.ContainerNetworksAdvancedArgs(
+    name=network.name
+  )],
+  opts=pulumi.ResourceOptions(depends_on=[mongo_container])
+)
