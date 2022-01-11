@@ -21,3 +21,6 @@ frontend = docker.Image(
   image_name=f'{frontend_image_name}:{stack}',
   skip_push=True
 )
+
+# build mongodb image
+mongo_image = docker.RemoteImage('mongo', name='mongo:bionic')
