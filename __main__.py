@@ -109,3 +109,6 @@ frontend_container = docker.Container(
     name=network.name
   )]
 )
+
+# exports
+pulumi.export('url', f'http://localhost:{frontend_port}')
