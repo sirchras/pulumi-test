@@ -9,6 +9,8 @@ mongo_port = config.require_int('mongo_port')
 mongo_host = config.require('mongo_host')
 database = config.require('database')
 node_environment = config.require('node_environment')
+mongo_username = config.require('mongo_username')
+mongo_password = config.require_secret('mongo_password')
 
 stack = pulumi.get_stack()
 
@@ -45,6 +47,10 @@ mongo_container = docker.Container(
     internal=mongo_port,
     external=mongo_port
   )],
+  envs=[
+    f'MONGO_INITDB_ROOT_USERNAME={mongo_username}',
+    pulumi.Output.concat('MONGO_INITDB_ROOT_PASSWORD=', mongo_password)
+  ],
   networks_advanced=[docker.ContainerNetworksAdvancedArgs(
     name=network.name,
     aliases=['mongo']
@@ -61,8 +67,17 @@ backend_container = docker.Container(
     external=backend_port
   )],
   envs=[
-    f'DATABASE_HOST={mongo_host}',
-    f'DATABASE_NAME={database}',
+    pulumi.Output.concat(
+      'DATABASE_HOST=mongodb://',
+      mongo_username,
+      ':',
+      mongo_password,
+      '@',
+      mongo_host,
+      ':',
+      f'{mongo_port}'
+    ),
+    f'DATABASE_NAME={database}?authSource=admin',
     f'NODE_ENV={node_environment}'
   ],
   networks_advanced=[docker.ContainerNetworksAdvancedArgs(
@@ -85,7 +100,15 @@ data_seed_container = docker.Container(
   )],
   command=[
     'sh', '-c',
-    'mongoimport --host mongo --db cart --collection products --type json --file /home/products.json --jsonArray'
+    pulumi.Output.concat(
+      'mongoimport --host ',
+      mongo_host,
+      ' -u ',
+      mongo_username,
+      ' -p ',
+      mongo_password,
+      ' --authenticationDatabase admin --db cart --collection products --type json --file /home/products.json --jsonArray'
+    )
   ],
   networks_advanced=[docker.ContainerNetworksAdvancedArgs(
     name=network.name

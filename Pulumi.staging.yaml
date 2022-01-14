@@ -3,5 +3,8 @@ config:
   pulumi-test:database: cart
   pulumi-test:frontend_port: "3002"
   pulumi-test:mongo_host: mongodb://mongo:27017
+  pulumi-test:mongo_password:
+    secure: AAABAMgbq5+zBfnpF5K6EDEw04leQzU/xlxv3GFTVBTWO+diIvE=
   pulumi-test:mongo_port: "27017"
+  pulumi-test:mongo_username: admin
   pulumi-test:node_environment: development
