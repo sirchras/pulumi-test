@@ -27,7 +27,12 @@ database_image_name = 'database'
 database_image_path = f'{registry_org}/{registry_stub}-{database_image_name}:main'
 
 # aws resources
-cluster = aws.ecs.Cluster('my-cluster')
+cluster = aws.ecs.Cluster(
+  'my-cluster',
+  tags={
+    'Name': 'tag'
+  }
+)
 
 # mongodb resources
 
